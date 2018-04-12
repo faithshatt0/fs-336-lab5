@@ -8,12 +8,15 @@
             
             foreach ($items as $item) {
                 $itemName = $item['name'];
-                $itemPrice = $item['salePrice'];
-                $itemImage = $item['thumbnailImage'];
-                $itemId = $item['itemId'];
+                $itemPrice = $item['price'];
+                $itemImage = $item['image_url'];
+                $itemId = $item['item_id'];
                 
                 echo "<tr>";
-                echo "<td><img src='$itemImage'></td>";
+                
+                if($itemImage)
+                    echo "<td><img src='$itemImage'></td>";
+                
                 echo "<td><h4>$itemName</h4></td>";
                 echo "<td><h4>$itemPrice</h4></td>";
                 

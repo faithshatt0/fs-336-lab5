@@ -1,5 +1,7 @@
 <?php
     session_start();
+    include 'functions.php';
+    include 'database.php';
 ?>
 
 <!DOCTYPE html>
@@ -34,10 +36,28 @@
             <!-- Search Form -->
             <form enctype="text/plain">
                 <div class="form-group">
-                    <label for="pName">Product Name</label>
-                    <input type="text" class="form-control" name="query" id="pName" placeholder="Name">
+                    <h1>OtterMart</h1>
+                    </br>
+                    Product: <input type="text" name="query" id="pName" placeholder="Name">
+                    </br></br>
+                    Category 
+                    <select name="category">
+                        <?php echo getCategoriesHTML(); ?>
+                    </select>
+                    </br></br>
+                    Price: From  
+                    <input type="text" name="fromPrice" id="fromprice" size="4">
+                    To <input type="text" name="toPrice" id="toprice" size="4">
+                    </br></br>
+                    Order Results By: 
+                    <input type="radio" name="order" value="byName" /> Product Name
+                    </br>
+                    <input type="radio" name="order" value="byPrice" /> Price
+                    </br></br>
+                    <input type="checkbox" name="displayPics" value="true" /> Display Product Pictures
+                    </br></br>
                 </div>
-                <input type="submit" value="Submit" class="btn btn-default">
+                <input type="submit" name="search-submitted" value="Search" class="btn btn-default">
                 <br /><br />
             </form>
             
@@ -45,7 +65,6 @@
             
             </br>
             <?php
-                include 'functions.php';
                 
                 if(isset($_POST['itemName'])) {
                     //creating an array to hold an items properties
@@ -62,25 +81,43 @@
                     $_SESSION['cart'] = array();
                 }
                 
-                if (isset($_GET['query'])) {
-                    include 'wmapi.php';
-                    $items = getProducts($_GET['query']);
+                $category = '';
+                $query = '';
+                $toPrice = '';
+                $fromPrice = '';
+                $order = '';
+                $displayPics = false;
+                
+                if (isset($_GET["category"]) && !empty($_GET["category"])) {
+                    $category = $_GET["category"]; 
                 }
                 
-                // if (isset($_POST['itemName'])) {
-                    
-                //     //creating an array to hold an items properties
-                //     $newItem = array();
-                //     $newItem['name'] = $_POST['itemName'];
-                //     $newItem['id'] = $_POST['itemId'];
-                //     $newItem['price'] = $_POST['itemPrice'];
-                //     $newItem['image'] = $_POST['itemImage'];
-                    
-                //     array_push($_SESSION['cart'], $newItem);
-                // }
+                if (isset($_GET["fromPrice"]) && !empty($_GET["fromPrice"])) {
+                    $fromPrice =  $_GET["fromPrice"]; 
+                }
+                
+                if (isset($_GET["toPrice"]) && !empty($_GET["toPrice"])) {
+                    $toPrice = $_GET["toPrice"];
+                }
+                
+                if (isset($_GET["order"]) && !empty($_GET["order"])) {
+                    $order = $_GET["order"];
+                }
+                
+                if (isset($_GET["displayPics"]) && !empty($_GET["displayPics"])) {
+                    $displayPics = true;
+                }
+                
+                if (isset($_GET['query'])) {
+                    $query = $_GET['query'];
+                }
+
+                if(isset($_GET['search-submitted'])) {
+                    $items = getMatchingItems($query, $category, $fromPrice, $toPrice, $order, $displayPics);
+                }
+                
+                displayResults($items);
             ?>
-            
-            <?php displayResults(); ?>
             </br>
         </div>
     </div>
