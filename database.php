@@ -4,16 +4,42 @@ mysql://bc97e9668307a6:1f45438a@us-cdbr-iron-east-05.cleardb.net/heroku_f1786d64
 
 function getDatabaseConnection() {
     
-    $host = "us-cdbr-iron-east-05.cleardb.net";
-    $username = "bc97e9668307a6";
-    $password = "1f45438a";
-    $dbname = "heroku_f1786d645f9bdda"; 
+    // $host = "us-cdbr-iron-east-05.cleardb.net";
+    // $username = "bc97e9668307a6";
+    // $password = "1f45438a";
+    // $dbname = "heroku_f1786d645f9bdda"; 
     
-    // Create connection
-    $dbConn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    $dbConn -> setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    
+    
+    // // Create connection
+    // $dbConn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    // $dbConn -> setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    return $dbConn; 
+    // return $dbConn; 
+    
+    $host = 'localhost';
+    $db = 'shopping_cart';
+    $user = 'faith';
+    $pass = 'booyah';
+    $charset = 'utf8mb4';
+    
+    //checking whether the URL contains "herokuapp" (using Heroku)
+    if(strpos($_SERVER['HTTP_HOST'], 'herokuapp') !== false) {
+       $url = parse_url(getenv("CLEARDB_DATABASE_URL"));
+       $host = $url["host"];
+       $db   = substr($url["path"], 1);
+       $user = $url["user"];
+       $pass = $url["pass"];
+    }
+    
+    $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
+    $opt = [
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    PDO::ATTR_EMULATE_PREPARES => false,
+    ];
+    $pdo = new PDO($dsn, $user, $pass, $opt);
+    return $pdo; 
 }
 
 function insertItemsIntoDB($items) {
