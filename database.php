@@ -1,6 +1,6 @@
 <?php
 
-mysql://bc97e9668307a6:1f45438a@us-cdbr-iron-east-05.cleardb.net/heroku_f1786d645f9bdda?reconnect=true
+// mysql://bc97e9668307a6:1f45438a@us-cdbr-iron-east-05.cleardb.net/heroku_f1786d645f9bdda?reconnect=true
 
 function getDatabaseConnection() {
     
